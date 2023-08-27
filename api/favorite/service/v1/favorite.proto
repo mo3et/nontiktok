@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package favorite.service.v1;
+
+option go_package = "nontiktok/api/favorite/service/v1;v1";
+
+import "google/api/annotations.proto";
+
+service FavoriteService {
+  rpc GetFavoriteList(FavoriteListRequest) returns (FavoriteListReply) {
+    option (google.api.http) = {get: "/douyin/favorite/list"};
+  }
+  rpc FavoriteAction(FavoriteActionRequest) returns (FavoriteActionReply) {
+    option (google.api.http) = {
+      post: "/douyin/favorite/action"
+      body: "*"
+    };
+  }
+  rpc IsFavorite(IsFavoriteRequest) returns (IsFavoriteReply) {}
+}
+
+message IsFavoriteRequest {
+  uint32 user_id = 1;
+  repeated uint32 video_ids = 2;
+}
+
+message IsFavoriteReply {
+  repeated bool is_favorite = 1;
+}
+
+message FavoriteListRequest {
+  uint32 user_id = 1;
+  string token = 2;
+}
+
+message FavoriteListReply {
+  int32 status_code = 1 [json_name = "status_code"];
+  string status_msg = 2 [json_name = "status_msg"];
+  repeated Video video_list = 3 [json_name = "video_list"];
+}
+
+message FavoriteActionRequest {
+  string token = 1;
+  uint32 video_id = 2;
+  uint32 action_type = 3;
+}
+
+message FavoriteActionReply {
+  int32 status_code = 1 [json_name = "status_code"];
+  string status_msg = 2 [json_name = "status_msg"];
+}
+
+message Video {
+  uint32 id = 1 [json_name = "id"];
+  User author = 2 [json_name = "author"];
+  string play_url = 3 [json_name = "play_url"];
+  string cover_url = 4 [json_name = "cover_url"];
+  uint32 favorite_count = 5 [json_name = "favorite_count"];
+  uint32 comment_count = 6 [json_name = "comment_count"];
+  bool is_favorite = 7 [json_name = "is_favorite"];
+  string title = 8 [json_name = "title"];
+}
+
+message User {
+  uint32 id = 1 [json_name = "id"];
+  string name = 2 [json_name = "name"];
+  uint32 follow_count = 3 [json_name = "follow_count"];
+  uint32 follower_count = 4 [json_name = "follower_count"];
+  bool is_follow = 5 [json_name = "is_follow"];
+  string avatar = 6 [json_name = "avatar"];
+  string background_image = 7 [json_name = "background_image"];
+  string signature = 8 [json_name = "signature"];
+  uint32 total_favorited = 9 [json_name = "total_favorited"];
+  uint32 work_count = 10 [json_name = "work_count"];
+  uint32 favorite_count = 11 [json_name = "favorite_count"];
+}

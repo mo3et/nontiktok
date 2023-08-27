@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+package relation.service.v1;
+
+option go_package = "nontiktok/api/relation/service/v1;v1";
+
+import "google/api/annotations.proto";
+
+service RelationService {
+  rpc GetFollowerRelationList(RelationFollowerListRequest) returns (RelationFollowerListReply) {
+    option (google.api.http) = {
+      get: "/douyin/relation/follower/list"
+    };
+  }
+  rpc GetFollowRelationList(RelationFollowListRequest) returns (RelationFollowListReply) {
+    option (google.api.http) = {
+      get: "/douyin/relation/follow/list"
+    };
+  }
+  rpc RelationAction(RelationActionRequest) returns (RelationActionReply) {
+    option (google.api.http) = {
+      post: "/douyin/relation/action"
+      body: "*"
+    };
+  }
+  rpc IsFollow(IsFollowRequest) returns (IsFollowReply) {}
+}
+
+message IsFollowRequest {
+  uint32 user_id = 1;
+  repeated uint32 to_user_id = 2;
+}
+
+message IsFollowReply {
+  repeated bool is_follow = 1;
+}
+
+message RelationActionRequest {
+  string token = 1;
+  uint32 to_user_id = 2;
+  uint32 action_type = 3;
+}
+
+message RelationActionReply{
+  int32 status_code = 1 [json_name = "status_code"];
+  string status_msg = 2 [json_name = "status_msg"];
+}
+
+message RelationFollowerListRequest {
+  uint32 user_id = 1;
+  string token = 2;
+}
+
+message RelationFollowerListReply {
+  int32 status_code = 1 [json_name = "status_code"];
+  string status_msg = 2 [json_name = "status_msg"];
+  repeated User user_list = 3 [json_name = "user_list"];
+}
+
+message RelationFollowListRequest {
+  uint32 user_id = 1;
+  string token = 2;
+}
+
+message RelationFollowListReply {
+  int32 status_code = 1 [json_name = "status_code"];
+  string status_msg = 2 [json_name = "status_msg"];
+  repeated User user_list = 3 [json_name = "user_list"];
+}
+
+message User {
+  uint32 id = 1 [json_name = "id"];
+  string name = 2 [json_name = "name"];
+  uint32 follow_count = 3 [json_name = "follow_count"];
+  uint32 follower_count = 4 [json_name = "follower_count"];
+  bool is_follow = 5 [json_name = "is_follow"];
+  string avatar = 6 [json_name = "avatar"];
+  string background_image = 7 [json_name = "background_image"];
+  string signature = 8 [json_name = "signature"];
+  uint32 total_favorited = 9 [json_name = "total_favorited"];
+  uint32 work_count = 10 [json_name = "work_count"];
+  uint32 favorite_count = 11 [json_name = "favorite_count"];
+}

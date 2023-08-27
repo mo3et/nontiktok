@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package message.service.v1;
+
+option go_package = "nontiktok/api/message/service/v1;v1";
+
+import "google/api/annotations.proto";
+
+service messageService {
+	rpc GetMessageList(MessageListRequest) returns (MessageListReply) {
+		option (google.api.http) = {
+			get: "/douyin/message/chat"
+		};
+	}
+	rpc MessageAction(MessageActionRequest) returns (MessageActionReply) {
+		option (google.api.http) = {
+			post: "/douyin/message/action"
+			body: "*"
+		};
+	}
+}
+
+message MessageListRequest {
+  string token = 1;
+  int64 to_user_id = 2;
+  int64 pre_msg_time=3;
+}
+
+message MessageListReply {
+  int32 status_code = 1 [json_name = "status_code"];
+  string status_msg = 2 [json_name = "status_msg"];
+  repeated Message message_list = 3 [json_name = "message_list"];
+}
+
+message MessageActionRequest {
+  string token = 1;
+  int64 to_user_id = 2;
+  int32 action_type = 3;
+  string content = 4;
+}
+
+message MessageActionReply {
+  int32 status_code = 1 [json_name = "status_code"];
+  string status_msg = 2 [json_name = "status_msg"];
+}
+
+message Message {
+  int64 id = 1 [json_name = "id"]; // 消息id
+  int64 to_user_id = 2 [json_name = "to_user_id"];
+  int64 from_user_id =3 [json_name = "from_user_id"];
+  string content = 4 [json_name = "content"];
+  string create_time = 5 [json_name = "create_time"];
+}

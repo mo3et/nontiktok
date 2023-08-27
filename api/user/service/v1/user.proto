@@ -1,0 +1,125 @@
+syntax = "proto3";
+
+package user.service.v1;
+
+option go_package = "nontiktok/api/user/service/v1;v1";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+service UserService {
+	rpc UserRegister(UserRegisterRequest) returns (UserRegisterReply) {
+		option (google.api.http) = {
+			post: "/douyin/user/register"
+			body: "*"
+		};
+	}
+
+	rpc UserLogin(UserLoginRequest) returns (UserLoginReply) {
+		option (google.api.http) = {
+			post: "/douyin/user/login"
+			body: "*"
+		};
+	}
+
+	rpc GetUserInfo(UserInfoRequest) returns (UserInfoReply) {
+		option (google.api.http) = {
+			get: "/douyin/user"
+		};
+	}
+
+	rpc GetUserInfos(UserInfosRequest) returns (UserInfosReply);
+
+	rpc UpdateFollow(UpdateFollowRequest) returns (google.protobuf.Empty);
+
+	rpc UpdateFollower(UpdateFollowerRequest) returns (google.protobuf.Empty);
+
+	rpc UpdateFavorited(UpdateFavoritedRequest) returns (google.protobuf.Empty);
+
+	rpc UpdateWork(UpdateWorkRequest) returns (google.protobuf.Empty);
+
+	rpc UpdateFavorite(UpdateFavoriteRequest) returns (google.protobuf.Empty);
+}
+
+message User {
+	uint32 id = 1 [json_name = "id"];
+	string name = 2 [json_name = "name"];
+	uint32 follow_count = 3 [json_name = "follow_count"];
+	uint32 follower_count = 4 [json_name = "follower_count"];
+	bool is_follow = 5 [json_name = "is_follow"];
+	string avatar = 6 [json_name = "avatar"];
+	string background_image = 7 [json_name = "background_image"];
+	string signature = 8 [json_name = "signature"];
+	uint32 total_favorited = 9 [json_name = "total_favorited"];
+	uint32 work_count = 10 [json_name = "work_count"];
+	uint32 favorite_count = 11 [json_name = "favorite_count"];
+}
+
+message UserInfoRequest {
+	uint32 user_id = 1;
+	string token = 2;
+}
+
+message UserInfoReply {
+	int32 status_code = 1 [json_name = "status_code"];
+	string status_msg = 2 [json_name = "status_msg"];
+	User user = 3 [json_name = "user"];
+}
+
+message UserLoginRequest {
+	string username = 1;
+	string password = 2;
+}
+
+message UserLoginReply {
+	int32 status_code = 1 [json_name = "status_code"];
+	string status_msg = 2 [json_name = "status_msg"];
+	uint32 user_id = 3 [json_name = "user_id"];
+	string token = 4 [json_name = "token"];
+}
+
+message UserRegisterRequest {
+	string username = 1;
+	string password = 2;
+}
+
+message UserRegisterReply {
+	int32 status_code = 1 [json_name = "status_code"];
+	string status_msg = 2 [json_name = "status_msg"];
+	uint32 user_id = 3 [json_name = "user_id"];
+	string token = 4 [json_name = "token"];
+}
+
+message UserInfosRequest {
+	uint32 user_id = 1;
+	repeated uint32 user_ids = 2;
+}
+
+message UserInfosReply {
+	repeated User users = 1;
+}
+
+message UpdateFollowRequest {
+	uint32 user_id = 1;
+	int32 follow_change = 2;
+}
+
+message UpdateFollowerRequest {
+	uint32 user_id = 1;
+	int32 follower_change = 2;
+}
+
+message UpdateFavoritedRequest {
+	uint32 user_id = 1;
+	int32 favorited_change = 2;
+}
+
+message UpdateWorkRequest {
+	uint32 user_id = 1;
+	int32 work_change = 2;
+}
+
+message UpdateFavoriteRequest {
+	uint32 user_id = 1;
+	int32 favorite_change = 2;
+}

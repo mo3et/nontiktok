@@ -1,0 +1,102 @@
+syntax = "proto3";
+
+package publish.service.v1;
+
+option go_package = "nontiktok/api/publish/service/v1;v1";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+service PublishService {
+	rpc GetPublishList(PublishListRequest) returns (PublishListReply) {
+		option (google.api.http) = {
+			get: "/douyin/publish/list"
+		};
+	}
+	rpc PublishAction(PublishActionRequest) returns (PublishActionReply) {
+		option (google.api.http) = {
+			post: "/douyin/publish/action"
+			body: "*"
+		};
+	}
+
+	rpc GetVideoList(VideoListRequest) returns (VideoListReply) {}
+	rpc GetVideoListByVideoIds(VideoListByVideoIdsRequest) returns (VideoListReply) {}
+	rpc UpdateFavorite(UpdateFavoriteCountRequest) returns (google.protobuf.Empty) {}
+	rpc UpdateComment(UpdateCommentCountRequest) returns (google.protobuf.Empty) {}
+}
+
+message Video {
+	uint32 id = 1 [json_name = "id"];
+	User author = 2 [json_name = "author"];
+	string play_url = 3 [json_name = "play_url"];
+	string cover_url = 4 [json_name = "cover_url"];
+	uint32 favorite_count = 5 [json_name = "favorite_count"];
+	uint32 comment_count = 6 [json_name = "comment_count"];
+	bool is_favorite = 7 [json_name = "is_favorite"];
+	string title = 8 [json_name = "title"];
+}
+
+message User {
+	uint32 id = 1 [json_name = "id"];
+	string name = 2 [json_name = "name"];
+	uint32 follow_count = 3 [json_name = "follow_count"];
+	uint32 follower_count = 4 [json_name = "follower_count"];
+	bool is_follow = 5 [json_name = "is_follow"];
+	string avatar = 6 [json_name = "avatar"];
+	string background_image = 7 [json_name = "background_image"];
+	string signature = 8 [json_name = "signature"];
+	uint32 total_favorited = 9 [json_name = "total_favorited"];
+	uint32 work_count = 10 [json_name = "work_count"];
+	uint32 favorite_count = 11 [json_name = "favorite_count"];
+}
+
+message VideoListRequest {
+	string latest_time = 1;
+	uint32 user_id = 2;
+	uint32 number = 3;
+}
+
+message VideoListReply {
+	int64 next_time = 1;
+	repeated Video video_list = 2;
+}
+
+message VideoListByVideoIdsRequest {
+	uint32 user_id = 2;
+	repeated uint32 video_ids = 1;
+}
+
+message UpdateFavoriteCountRequest {
+	uint32 video_id = 1;
+	int32 favorite_change = 2;
+}
+
+message UpdateCommentCountRequest {
+	uint32 video_id = 1;
+	int32 comment_change = 2;
+}
+
+message PublishActionRequest {
+	string token = 1;
+	bytes data = 2;
+	string title = 3;
+}
+
+message PublishActionReply {
+	int32 status_code = 1 [json_name = "status_code"];
+	string status_msg = 2 [json_name = "status_msg"];
+}
+
+message PublishListRequest {
+	uint32 user_id = 1;
+	string token = 2;
+}
+
+message PublishListReply {
+	int32 status_code = 1 [json_name = "status_code"];
+	string status_msg = 2 [json_name = "status_msg"];
+	repeated Video video_list = 3 [json_name = "video_list"];
+}
+
+
